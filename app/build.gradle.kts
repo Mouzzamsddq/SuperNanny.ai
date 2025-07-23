@@ -3,6 +3,7 @@ plugins {
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.hilt.android)
   alias(libs.plugins.ksp)
+  alias(libs.plugins.google.services)
 
 }
 
@@ -56,4 +57,8 @@ dependencies {
   implementation(libs.androidx.lifecycle.livedata.ktx)
   implementation(libs.hilt.android)
   ksp(libs.hilt.compiler)
+  implementation(platform(libs.firebase.bom))
+  implementation(libs.firebase.auth)
+  implementation(libs.androidx.navigation.fragment.ktx)
+  implementation(libs.androidx.navigation.ui.ktx)
 }
