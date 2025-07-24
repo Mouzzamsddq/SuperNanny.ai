@@ -38,6 +38,8 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-media3-common-ktx = { group = "androidx.media3", name = "media3-common-ktx", version.ref = "media3CommonKtx" }
+cardview = { group = "androidx.cardview", name = "cardview", version = "1.0.0" }
+glide = { group = "com.github.bumptech.glide", name = "glide", version = "4.16.0" }
 
 
 [plugins]

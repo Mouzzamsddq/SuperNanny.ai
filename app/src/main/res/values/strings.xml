@@ -5,4 +5,5 @@
   <string name="send_otp">Send OTP</string>
   <string name="enter_otp">Enter OTP</string>
   <string name="type_your_query">Type your query</string>
+  <string name="image">Image</string>
 </resources>

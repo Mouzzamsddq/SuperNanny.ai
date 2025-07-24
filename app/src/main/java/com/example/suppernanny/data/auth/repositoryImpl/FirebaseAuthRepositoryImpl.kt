@@ -11,8 +11,11 @@ import com.google.firebase.auth.PhoneAuthProvider
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.delay
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class FirebaseAuthRepositoryImpl @Inject constructor(
   private val firebaseAuth: FirebaseAuth,
@@ -28,12 +31,19 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
       object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         override fun onVerificationCompleted(credential: PhoneAuthCredential) {
           trySend(State.Success("Auto verification completed"))
-          close()
+          // Add delay to allow loader to show
+          GlobalScope.launch {
+            delay(400)
+            close()
+          }
         }
 
         override fun onVerificationFailed(e: FirebaseException) {
           trySend(State.Error("Verification failed ${e.message}", e))
-          close()
+          GlobalScope.launch {
+            delay(400)
+            close()
+          }
         }
 
         override fun onCodeSent(
@@ -41,7 +51,10 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
           token: PhoneAuthProvider.ForceResendingToken
         ) {
           trySend(State.Success(verificationId))
-          close()
+          GlobalScope.launch {
+            delay(400)
+            close()
+          }
         }
       }
 
@@ -72,7 +85,10 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
         } else {
           trySend(State.Error("OTP verification failed ${task.exception?.message}", task.exception))
         }
-        close()
+        GlobalScope.launch {
+          delay(400)
+          close()
+        }
       }
     awaitClose {
     }

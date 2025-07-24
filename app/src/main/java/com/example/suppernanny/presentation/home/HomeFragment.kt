@@ -38,7 +38,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
           viewModel.sendMessageState.collect { state ->
             when (state) {
               is State.Success -> {
-                binding.etMessage.text.clear()
+                binding.etMessage.text?.clear()
               }
 
               is State.Error -> {

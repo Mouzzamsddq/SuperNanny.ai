@@ -122,23 +122,39 @@ class AuthFragment : BaseFragment<FragmentAuthBinding>(
   }
 
   private fun showLoader() {
-    binding.progressBar.isVisible = true
+    binding.buttonLoader.isVisible = true
+    binding.btnSendOtp.isEnabled = false
+    binding.btnSendOtp.text = ""
   }
 
   private fun hideLoader() {
-    binding.progressBar.isVisible = false
+    binding.buttonLoader.isVisible = false
+    binding.btnSendOtp.isEnabled = true
+    binding.btnSendOtp.text = getString(R.string.send_otp)
   }
 
   private fun handleClicks() {
     binding.apply {
+      // Prevent keyboard tick from submitting OTP
+      etOtp.setOnEditorActionListener { _, _, _ -> true }
+
       btnSendOtp.setOnClickListener {
         val enteredPhoneNumber = etPhoneNumber.text.toString()
-        if (enteredPhoneNumber.isBlank()) return@setOnClickListener
-        if (activity !is MainActivity) return@setOnClickListener
         if (btnSendOtp.text == "Verify OTP") {
-          viewModel.verifyOtp(etOtp.text.toString().trim())
-        } else
+          val otp = etOtp.text.toString().trim()
+          if (otp.isBlank()) {
+            etOtp.error = "Please enter the OTP"
+            return@setOnClickListener
+          }
+          viewModel.verifyOtp(otp)
+        } else {
+          if (enteredPhoneNumber.isBlank()) {
+            etPhoneNumber.error = "Please enter your phone number"
+            return@setOnClickListener
+          }
+          if (activity !is MainActivity) return@setOnClickListener
           viewModel.sendOtp(enteredPhoneNumber, activity as MainActivity)
+        }
       }
     }
   }
