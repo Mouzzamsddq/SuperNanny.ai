@@ -37,14 +37,18 @@ class AuthFragment : BaseFragment<FragmentAuthBinding>(
               is State.Loading -> showLoader()
               is State.Success -> {
                 hideLoader()
-                showOtpInput()
+                // Only show OTP input if this is a verificationId, not auto-verification
+                if (state.data != "Auto verification completed") {
+                  showOtpInput()
+                } else {
+                  // Optionally, you can show a message for auto-verification
+                  showDialog("Auto verification completed", "Info", navigateHome = true)
+                }
               }
-
               is State.Error -> {
                 hideLoader()
-                showDialog(state.message, "Error")
+                showDialog(state.message, "Error", navigateHome = false)
               }
-
               else -> Unit
             }
           }
@@ -56,32 +60,33 @@ class AuthFragment : BaseFragment<FragmentAuthBinding>(
               is State.Loading -> showLoader()
               is State.Success -> {
                 hideLoader()
-                hideButton()
-                hideOTPInput()
-                showDialog("OTP Verified, User logged in!", "Success")
+                if (state.data == true) {
+                  hideButton()
+                  hideOTPInput()
+                  showDialog("OTP Verified, User logged in!", "Success", navigateHome = true)
+                } else {
+                  showDialog("OTP verification failed.", "Error", navigateHome = false)
+                }
               }
-
               is State.Error -> {
                 hideLoader()
-                showDialog(state.message, "Error")
+                showDialog(state.message, "Error", navigateHome = false)
               }
-
               else -> Unit
             }
           }
         }
       }
     }
-
   }
 
   private fun showOtpInput() {
-    binding.etOtp.isVisible = true
+    binding.otpInputLayout.isVisible = true
     binding.btnSendOtp.text = "Verify OTP"
   }
 
   private fun hideOTPInput() {
-    binding.etOtp.isVisible = false
+    binding.otpInputLayout.isVisible = false
   }
 
   private fun hideButton() {
@@ -89,14 +94,16 @@ class AuthFragment : BaseFragment<FragmentAuthBinding>(
   }
 
 
-  private fun showDialog(message: String, title: String) {
+  private fun showDialog(message: String, title: String, navigateHome: Boolean = true) {
     errorDialog?.dismiss()
     errorDialog = AlertDialog.Builder(requireContext())
       .setTitle(title)
       .setMessage(message)
       .setPositiveButton("OK") { dialog, _ ->
         dialog.dismiss()
-        navigateToHome()
+        if (navigateHome) {
+          navigateToHome()
+        }
       }
       .setCancelable(true)
       .create()
