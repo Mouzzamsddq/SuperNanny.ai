@@ -1,9 +1,7 @@
 package com.example.suppernanny.di
 
-import com.example.suppernanny.data.auth.repositoryImpl.FirebaseAuthRepositoryImpl
-import com.example.suppernanny.domain.auth.repository.AuthRepository
 import com.google.firebase.auth.FirebaseAuth
-import dagger.Binds
+import com.google.firebase.database.FirebaseDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,5 +14,7 @@ object AppModule {
   @Provides
   fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
+  @Provides
+  fun providedFirebaseDatabase(): FirebaseDatabase = FirebaseDatabase.getInstance()
 
 }
